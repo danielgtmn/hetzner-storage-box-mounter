@@ -1,6 +1,6 @@
 name: HetznerMount
 options:
-  bundleIdPrefix: com.hetzner.mount
+  bundleIdPrefix: com.danielgtmn.hetznermount
   deploymentTarget:
     macOS: "14.0"
   groupSortPosition: top
@@ -18,7 +18,7 @@ targets:
       - path: HetznerMount
     settings:
       base:
-        PRODUCT_BUNDLE_IDENTIFIER: com.hetzner.mount.app
+        PRODUCT_BUNDLE_IDENTIFIER: com.danielgtmn.hetznermount
         PRODUCT_NAME: HetznerMount
         MACOSX_DEPLOYMENT_TARGET: "14.0"
         SWIFT_VERSION: "5.9"
@@ -41,7 +41,7 @@ targets:
       - path: FileProviderExtension
     settings:
       base:
-        PRODUCT_BUNDLE_IDENTIFIER: com.hetzner.mount.app.fileprovider
+        PRODUCT_BUNDLE_IDENTIFIER: com.danielgtmn.hetznermount.fileprovider
         PRODUCT_NAME: FileProviderExtension
         MACOSX_DEPLOYMENT_TARGET: "14.0"
         SWIFT_VERSION: "5.9"
