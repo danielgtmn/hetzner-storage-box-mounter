@@ -12,8 +12,8 @@ A native macOS menu bar app that mounts [Hetzner Storage Boxes](https://www.hetz
 
 Download the latest release from the [Releases page](https://github.com/danielgtmn/hetzner-storage-box-mounter/releases/latest).
 
-1. Unzip `HetznerMount.app.zip`
-2. Move `HetznerMount.app` to `/Applications`
+1. Open `HetznerMount.dmg`
+2. Drag `HetznerMount.app` to the Applications folder
 3. On first launch: Right-click → **Open** (required for unsigned apps)
 
 > **Note:** The app is currently unsigned. macOS Gatekeeper will block it on double-click. Use Right-click → Open to bypass this once.
