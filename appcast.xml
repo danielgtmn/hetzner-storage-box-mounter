@@ -1,0 +1,14 @@
+<?xml version="1.0" standalone="yes"?>
+<rss xmlns:sparkle="http://www.andymatuschak.org/xml-namespaces/sparkle" version="2.0">
+    <channel>
+        <title>HetznerMount</title>
+        <item>
+            <title>0.0.5</title>
+            <pubDate>Sun, 08 Feb 2026 22:52:41 +0000</pubDate>
+            <sparkle:version>26</sparkle:version>
+            <sparkle:shortVersionString>0.0.5</sparkle:shortVersionString>
+            <sparkle:minimumSystemVersion>14.0</sparkle:minimumSystemVersion>
+            <enclosure url="https://github.com/danielgtmn/hetzner-storage-box-mounter/releases/download/v0.0.5/HetznerMount.dmg" length="20873212" type="application/octet-stream" sparkle:edSignature="tT1gbc5uoOhuRpmn2ZxXDrNPO5uvuRdTtM2foFKVAnH92j/pF3rwmrU2kfkTWOXLzj2XHKpynTBYLMdQmd76AQ=="/>
+        </item>
+    </channel>
+</rss>
