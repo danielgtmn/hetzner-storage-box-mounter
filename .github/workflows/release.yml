@@ -66,33 +66,26 @@ jobs:
           mkdir -p sparkle-tools
           tar -xf Sparkle.tar.xz -C sparkle-tools
 
-      - name: Write Sparkle signing key
+      - name: Sign DMG with Sparkle EdDSA
         env:
           SPARKLE_PRIVATE_KEY: ${{ secrets.SPARKLE_PRIVATE_KEY }}
         run: |
-          echo "$SPARKLE_PRIVATE_KEY" > /tmp/sparkle_private_key
-          chmod 600 /tmp/sparkle_private_key
-
-      - name: Sign DMG with Sparkle EdDSA
-        run: |
-          ./sparkle-tools/bin/sign_update HetznerMount.dmg --ed-key-file /tmp/sparkle_private_key
+          echo -n "$SPARKLE_PRIVATE_KEY" | ./sparkle-tools/bin/sign_update HetznerMount.dmg --ed-key-file -
 
       - name: Generate Appcast
+        env:
+          SPARKLE_PRIVATE_KEY: ${{ secrets.SPARKLE_PRIVATE_KEY }}
         run: |
           REPO_URL="https://github.com/${{ github.repository }}/releases/download"
           mkdir -p appcast-staging
           cp HetznerMount.dmg appcast-staging/
 
-          ./sparkle-tools/bin/generate_appcast \
-            --ed-key-file /tmp/sparkle_private_key \
+          echo -n "$SPARKLE_PRIVATE_KEY" | ./sparkle-tools/bin/generate_appcast \
+            --ed-key-file - \
             --download-url-prefix "$REPO_URL/${GITHUB_REF_NAME}/" \
             appcast-staging
 
           cp appcast-staging/appcast.xml appcast.xml
-
-      - name: Clean up signing key
-        if: always()
-        run: rm -f /tmp/sparkle_private_key
 
       - name: Create GitHub Release
         uses: softprops/action-gh-release@v2
