@@ -1,3 +1,4 @@
+import Sparkle
 import SwiftUI
 import FileProvider
 import HetznerMountKit
@@ -5,6 +6,11 @@ import HetznerMountKit
 struct MenuBarView: View {
     @Environment(\.openWindow) private var openWindow
     @StateObject private var domainManager = DomainManager.shared
+    @StateObject private var updateViewModel: CheckForUpdatesViewModel
+
+    init(updater: SPUUpdater) {
+        _updateViewModel = StateObject(wrappedValue: CheckForUpdatesViewModel(updater: updater))
+    }
 
     var body: some View {
         VStack(alignment: .leading, spacing: 4) {
@@ -32,6 +38,11 @@ struct MenuBarView: View {
                 NSApp.activate(ignoringOtherApps: true)
             }
             .keyboardShortcut(",", modifiers: .command)
+
+            Button("Check for Updates...") {
+                updateViewModel.checkForUpdates()
+            }
+            .disabled(!updateViewModel.canCheckForUpdates)
 
             Divider()
 

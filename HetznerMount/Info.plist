@@ -18,5 +18,9 @@
 	<string>HetznerMount</string>
 	<key>LSMinimumSystemVersion</key>
 	<string>14.0</string>
+	<key>SUPublicEDKey</key>
+	<string>0mTIANeThVi0aSUHWb1Fvz7MTkCF2Zfh2bPj3vo49lo=</string>
+	<key>SUFeedURL</key>
+	<string>https://danielgtmn.github.io/hetzner-storage-box-mounter/appcast.xml</string>
 </dict>
 </plist>

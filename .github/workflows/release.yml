@@ -7,18 +7,31 @@ on:
 
 permissions:
   contents: write
+  pages: write
 
 jobs:
   build:
     runs-on: macos-15
     steps:
       - uses: actions/checkout@v4
+        with:
+          fetch-depth: 0
 
       - name: Install XcodeGen
         run: brew install xcodegen
 
       - name: Generate Xcode project
         run: xcodegen generate
+
+      - name: Set version from tag
+        run: |
+          VERSION="${GITHUB_REF_NAME#v}"
+          BUILD_NUMBER=$(git rev-list --count HEAD)
+          echo "VERSION=$VERSION" >> $GITHUB_ENV
+          echo "BUILD_NUMBER=$BUILD_NUMBER" >> $GITHUB_ENV
+          # Update Info.plist with version from tag
+          /usr/libexec/PlistBuddy -c "Set :CFBundleShortVersionString $VERSION" HetznerMount/Info.plist
+          /usr/libexec/PlistBuddy -c "Set :CFBundleVersion $BUILD_NUMBER" HetznerMount/Info.plist
 
       - name: Build Release
         run: |
@@ -46,8 +59,50 @@ jobs:
             "HetznerMount.dmg" \
             "$APP_PATH"
 
+      - name: Download Sparkle
+        run: |
+          SPARKLE_VERSION="2.6.4"
+          curl -L -o Sparkle.tar.xz "https://github.com/sparkle-project/Sparkle/releases/download/${SPARKLE_VERSION}/Sparkle-${SPARKLE_VERSION}.tar.xz"
+          mkdir -p sparkle-tools
+          tar -xf Sparkle.tar.xz -C sparkle-tools
+
+      - name: Sign DMG with Sparkle EdDSA
+        env:
+          SPARKLE_PRIVATE_KEY: ${{ secrets.SPARKLE_PRIVATE_KEY }}
+        run: |
+          echo "$SPARKLE_PRIVATE_KEY" | ./sparkle-tools/bin/sign_update HetznerMount.dmg
+
+      - name: Generate Appcast
+        env:
+          SPARKLE_PRIVATE_KEY: ${{ secrets.SPARKLE_PRIVATE_KEY }}
+        run: |
+          REPO_URL="https://github.com/${{ github.repository }}/releases/download"
+          mkdir -p appcast-staging
+          cp HetznerMount.dmg appcast-staging/
+
+          # generate_appcast needs the private key via environment variable
+          export EDDSA_PRIVATE_KEY="$SPARKLE_PRIVATE_KEY"
+          ./sparkle-tools/bin/generate_appcast \
+            --download-url-prefix "$REPO_URL/${GITHUB_REF_NAME}/" \
+            appcast-staging
+
+          cp appcast-staging/appcast.xml appcast.xml
+
       - name: Create GitHub Release
         uses: softprops/action-gh-release@v2
         with:
           files: HetznerMount.dmg
           generate_release_notes: true
+
+      - name: Publish Appcast to GitHub Pages
+        run: |
+          git config user.name "github-actions[bot]"
+          git config user.email "github-actions[bot]@users.noreply.github.com"
+
+          # Create or update gh-pages branch
+          git checkout --orphan gh-pages-tmp
+          git rm -rf .
+          cp appcast.xml .
+          git add appcast.xml
+          git commit -m "Update appcast for ${GITHUB_REF_NAME}"
+          git push origin gh-pages-tmp:gh-pages --force
