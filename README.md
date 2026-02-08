@@ -4,6 +4,17 @@ A native macOS menu bar app that mounts [Hetzner Storage Boxes](https://www.hetz
 
 ![macOS 14+](https://img.shields.io/badge/macOS-14%2B-blue)
 ![Swift 5.9](https://img.shields.io/badge/Swift-5.9-orange)
+[![Build](https://github.com/danielgtmn/hetzner-storage-box-mounter/actions/workflows/build.yml/badge.svg)](https://github.com/danielgtmn/hetzner-storage-box-mounter/actions/workflows/build.yml)
+
+## Installation
+
+Download the latest release from the [Releases page](https://github.com/danielgtmn/hetzner-storage-box-mounter/releases/latest).
+
+1. Unzip `HetznerMount.app.zip`
+2. Move `HetznerMount.app` to `/Applications`
+3. On first launch: Right-click → **Open** (required for unsigned apps)
+
+> **Note:** The app is currently unsigned. macOS Gatekeeper will block it on double-click. Use Right-click → Open to bypass this once.
 
 ## Features
 
@@ -38,7 +49,7 @@ The app lives in the menu bar and shows all configured Storage Boxes with their 
 - Xcode 16+ (for building)
 - A Hetzner Storage Box with SSH/SFTP access enabled
 
-## Building
+## Building from Source
 
 1. Clone the repository:
    ```bash
@@ -46,18 +57,24 @@ The app lives in the menu bar and shows all configured Storage Boxes with their 
    cd hetzner-storage-box-mounter
    ```
 
-2. Open in Xcode:
+2. Install [XcodeGen](https://github.com/yonaskolb/XcodeGen) and generate the Xcode project:
+   ```bash
+   brew install xcodegen
+   xcodegen generate
+   ```
+
+3. Open in Xcode:
    ```bash
    open HetznerMount.xcodeproj
    ```
 
-3. In **Signing & Capabilities**, select your development team for both targets:
+4. In **Signing & Capabilities**, select your development team for both targets:
    - `HetznerMount`
    - `FileProviderExtension`
 
-4. Ensure the App Group `group.com.danielgtmn.hetznermount` is registered in your Apple Developer account.
+5. Ensure the App Group `group.com.danielgtmn.hetznermount` is registered in your Apple Developer account.
 
-5. Build and run (Cmd+R).
+6. Build and run (Cmd+R).
 
 ## Architecture
 
