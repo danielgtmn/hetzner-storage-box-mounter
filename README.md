@@ -6,6 +6,8 @@ A native macOS menu bar app that mounts [Hetzner Storage Boxes](https://www.hetz
 ![Swift 5.9](https://img.shields.io/badge/Swift-5.9-orange)
 [![Build](https://github.com/danielgtmn/hetzner-storage-box-mounter/actions/workflows/build.yml/badge.svg)](https://github.com/danielgtmn/hetzner-storage-box-mounter/actions/workflows/build.yml)
 
+> **Disclaimer:** This project is not affiliated with, endorsed by, or connected to Hetzner Online GmbH. HetznerMount is an independent, third-party tool created by the community. Hetzner and Storage Box are trademarks of Hetzner Online GmbH.
+
 ## Installation
 
 Download the latest release from the [Releases page](https://github.com/danielgtmn/hetzner-storage-box-mounter/releases/latest).
