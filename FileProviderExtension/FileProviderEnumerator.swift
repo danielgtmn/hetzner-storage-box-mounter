@@ -1,5 +1,8 @@
 import FileProvider
 import HetznerMountKit
+import os.log
+
+private let enumLogger = Logger(subsystem: "com.hetzner.mount.app.fileprovider", category: "Enumerator")
 
 class FileProviderEnumerator: NSObject, NSFileProviderEnumerator {
     private let containerIdentifier: NSFileProviderItemIdentifier
@@ -26,12 +29,15 @@ class FileProviderEnumerator: NSObject, NSFileProviderEnumerator {
         Task {
             do {
                 let remotePath = resolveRemotePath(for: containerIdentifier)
+                enumLogger.info("enumerateItems at: \(remotePath)")
                 let items = try await sftpOperations.listDirectory(at: remotePath)
+                enumLogger.info("Got \(items.count) items")
                 let fpItems = items.map { FileProviderItem(remoteItem: $0) }
                 observer.didEnumerate(fpItems)
                 observer.finishEnumerating(upTo: nil)
             } catch {
-                observer.finishEnumeratingWithError(error)
+                enumLogger.error("enumerateItems error: \(error.localizedDescription)")
+                observer.finishEnumeratingWithError(NSFileProviderError(.serverUnreachable))
             }
         }
     }
@@ -40,7 +46,6 @@ class FileProviderEnumerator: NSObject, NSFileProviderEnumerator {
         for observer: any NSFileProviderChangeObserver,
         from syncAnchor: NSFileProviderSyncAnchor
     ) {
-        // SFTP has no change feed, so we do a full re-scan
         Task {
             do {
                 let remotePath = resolveRemotePath(for: containerIdentifier)
@@ -52,7 +57,8 @@ class FileProviderEnumerator: NSObject, NSFileProviderEnumerator {
                 )
                 observer.finishEnumeratingChanges(upTo: newAnchor, moreComing: false)
             } catch {
-                observer.finishEnumeratingWithError(error)
+                enumLogger.error("enumerateChanges error: \(error.localizedDescription)")
+                observer.finishEnumeratingWithError(NSFileProviderError(.serverUnreachable))
             }
         }
     }

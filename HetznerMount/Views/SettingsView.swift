@@ -113,10 +113,18 @@ struct SettingsView: View {
     private func save() {
         config.save()
         if config.authMethod == .password && !password.isEmpty {
-            try? keychainManager.savePassword(password, for: config.username)
+            do {
+                try keychainManager.savePassword(password, for: config.username)
+                connectionTestResult = "Saved"
+                connectionTestSuccess = true
+            } catch {
+                connectionTestResult = "Config saved, but password failed: \(error.localizedDescription)"
+                connectionTestSuccess = false
+            }
+        } else {
+            connectionTestResult = "Saved"
+            connectionTestSuccess = true
         }
-        connectionTestResult = "Saved"
-        connectionTestSuccess = true
     }
 
     private func testConnection() {

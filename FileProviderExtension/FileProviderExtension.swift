@@ -1,5 +1,8 @@
 import FileProvider
 import HetznerMountKit
+import os.log
+
+private let logger = Logger(subsystem: "com.hetzner.mount.app.fileprovider", category: "Extension")
 
 class FileProviderExtension: NSObject, NSFileProviderReplicatedExtension {
     let domain: NSFileProviderDomain
@@ -14,13 +17,41 @@ class FileProviderExtension: NSObject, NSFileProviderReplicatedExtension {
     }
 
     private func setupConnection() {
-        guard let config = StorageBoxConfig.load() else { return }
+        guard let config = StorageBoxConfig.load() else {
+            logger.error("No config found")
+            return
+        }
         self.config = config
+        logger.info("Config loaded: host=\(config.host), user=\(config.username), basePath=\(config.basePath)")
+
         let keychain = KeychainManager()
-        let password = try? keychain.loadPassword(for: config.username)
+        let password: String?
+        do {
+            password = try keychain.loadPassword(for: config.username)
+            logger.info("Password loaded from keychain: \(password != nil ? "yes" : "NO")")
+        } catch {
+            logger.error("Keychain load failed: \(error.localizedDescription)")
+            password = nil
+        }
+
         let manager = SFTPConnectionManager(config: config, password: password)
         self.connectionManager = manager
         self.sftpOperations = SFTPOperations(connectionManager: manager)
+    }
+
+    /// Convert any error to an NSFileProviderError
+    private func wrapError(_ error: Error) -> NSError {
+        if let fpError = error as? NSFileProviderError {
+            return fpError as NSError
+        }
+        let desc = error.localizedDescription
+        if desc.contains("Permission") || desc.contains("PERMISSION") {
+            return NSFileProviderError(.notAuthenticated) as NSError
+        }
+        if desc.contains("No such file") || desc.contains("NOT_FOUND") {
+            return NSFileProviderError(.noSuchItem) as NSError
+        }
+        return NSFileProviderError(.serverUnreachable) as NSError
     }
 
     func invalidate() {
@@ -57,7 +88,7 @@ class FileProviderExtension: NSObject, NSFileProviderReplicatedExtension {
         if identifier == .rootContainer {
             let rootItem = RemoteItem(
                 path: config?.basePath ?? "/",
-                filename: "",
+                filename: "StorageBox",
                 isDirectory: true,
                 size: 0,
                 modificationDate: nil,
@@ -77,7 +108,8 @@ class FileProviderExtension: NSObject, NSFileProviderReplicatedExtension {
                 let remoteItem = try await ops.getAttributes(at: path)
                 completionHandler(FileProviderItem(remoteItem: remoteItem), nil)
             } catch {
-                completionHandler(nil, error)
+                logger.error("item() error: \(error.localizedDescription)")
+                completionHandler(nil, self.wrapError(error))
             }
             progress.completedUnitCount = 1
         }
@@ -104,7 +136,8 @@ class FileProviderExtension: NSObject, NSFileProviderReplicatedExtension {
                 let remoteItem = try await ops.getAttributes(at: remotePath)
                 completionHandler(localURL, FileProviderItem(remoteItem: remoteItem), nil)
             } catch {
-                completionHandler(nil, nil, error)
+                logger.error("fetchContents() error: \(error.localizedDescription)")
+                completionHandler(nil, nil, self.wrapError(error))
             }
         }
         return progress
@@ -141,7 +174,8 @@ class FileProviderExtension: NSObject, NSFileProviderReplicatedExtension {
                 let remoteItem = try await ops.getAttributes(at: remotePath)
                 completionHandler(FileProviderItem(remoteItem: remoteItem), [], false, nil)
             } catch {
-                completionHandler(nil, [], false, error)
+                logger.error("operation error: \(error.localizedDescription)")
+                completionHandler(nil, [], false, self.wrapError(error))
             }
         }
         return progress
@@ -189,7 +223,8 @@ class FileProviderExtension: NSObject, NSFileProviderReplicatedExtension {
                 let remoteItem = try await ops.getAttributes(at: currentPath)
                 completionHandler(FileProviderItem(remoteItem: remoteItem), [], identifierChanged, nil)
             } catch {
-                completionHandler(nil, [], false, error)
+                logger.error("operation error: \(error.localizedDescription)")
+                completionHandler(nil, [], false, self.wrapError(error))
             }
         }
         return progress
@@ -229,7 +264,8 @@ class FileProviderExtension: NSObject, NSFileProviderReplicatedExtension {
                 }
                 completionHandler(nil)
             } catch {
-                completionHandler(error)
+                logger.error("deleteItem() error: \(error.localizedDescription)")
+                completionHandler(self.wrapError(error))
             }
             progress.completedUnitCount = 1
         }

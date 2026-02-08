@@ -21,10 +21,13 @@ class DomainManager: ObservableObject {
             displayName: displayName
         )
         do {
+            print("[DomainManager] Adding domain: \(domainIdentifier.rawValue)")
             try await NSFileProviderManager.add(domain)
+            print("[DomainManager] Domain added successfully")
             isMounted = true
             error = nil
         } catch {
+            print("[DomainManager] Mount failed: \(error)")
             self.error = error.localizedDescription
             isMounted = false
         }
@@ -56,6 +59,8 @@ class DomainManager: ObservableObject {
 
     func checkCurrentState() async {
         let domains = (try? await NSFileProviderManager.domains()) ?? []
-        isMounted = domains.contains(where: { $0.identifier == domainIdentifier })
+        let found = domains.contains(where: { $0.identifier == domainIdentifier })
+        print("[DomainManager] checkCurrentState: \(domains.count) domains, mounted=\(found)")
+        isMounted = found
     }
 }
