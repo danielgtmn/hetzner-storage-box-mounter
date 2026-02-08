@@ -1,3 +1,5 @@
+<img width="150" height="150" alt="appstore" src="https://github.com/user-attachments/assets/c36879a2-d868-4ac7-9743-7cde4df25df0" />
+
 # HetznerMount
 
 A native macOS menu bar app that mounts [Hetzner Storage Boxes](https://www.hetzner.com/storage/storage-box/) as Finder volumes via SFTP, using Apple's FileProvider framework.
