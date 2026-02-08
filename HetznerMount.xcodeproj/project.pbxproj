@@ -15,6 +15,7 @@
 		582E9086A978DA7CF58B7D0D /* HetznerMountKit in Frameworks */ = {isa = PBXBuildFile; productRef = B5B8FBB53FE5AEAE6EA2D487 /* HetznerMountKit */; };
 		5F721C85576A96EB92FDBE74 /* HetznerMountApp.swift in Sources */ = {isa = PBXBuildFile; fileRef = 40A2A6386D1E38BA5E5DB46F /* HetznerMountApp.swift */; };
 		8A2D6F5DFD5803C648955E91 /* FileProviderItem.swift in Sources */ = {isa = PBXBuildFile; fileRef = C001672A8D6DC2D842AAAAC3 /* FileProviderItem.swift */; };
+		A1B2C3D4E5F6A7B8C9D0E1F2 /* StorageBoxListView.swift in Sources */ = {isa = PBXBuildFile; fileRef = F1E2D3C4B5A6978869574321 /* StorageBoxListView.swift */; };
 		C0BE0367A21F555C316A9551 /* Assets.xcassets in Resources */ = {isa = PBXBuildFile; fileRef = 39FB417AA1BB3D455A100235 /* Assets.xcassets */; };
 		D5729B83C2E04B3CADCF25E0 /* FileProviderExtension.swift in Sources */ = {isa = PBXBuildFile; fileRef = 7F5892DC48F1F51C9376749E /* FileProviderExtension.swift */; };
 		E178B646A99087794529F2AB /* FileProviderExtension.appex in Embed Foundation Extensions */ = {isa = PBXBuildFile; fileRef = 92763E59530AB3A22811B8E0 /* FileProviderExtension.appex */; settings = {ATTRIBUTES = (CodeSignOnCopy, RemoveHeadersOnCopy, ); }; };
@@ -59,6 +60,7 @@
 		C001672A8D6DC2D842AAAAC3 /* FileProviderItem.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = FileProviderItem.swift; sourceTree = "<group>"; };
 		CAD7D282F650E608B73E3D3E /* HetznerMountKit */ = {isa = PBXFileReference; lastKnownFileType = folder; name = HetznerMountKit; path = Packages/HetznerMountKit; sourceTree = SOURCE_ROOT; };
 		DBEACCABF52C34F8FB573E07 /* MenuBarView.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = MenuBarView.swift; sourceTree = "<group>"; };
+		F1E2D3C4B5A6978869574321 /* StorageBoxListView.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = StorageBoxListView.swift; sourceTree = "<group>"; };
 		F2B202ACF2687B676738E50A /* Info.plist */ = {isa = PBXFileReference; lastKnownFileType = text.plist; path = Info.plist; sourceTree = "<group>"; };
 /* End PBXFileReference section */
 
@@ -124,6 +126,7 @@
 			children = (
 				DBEACCABF52C34F8FB573E07 /* MenuBarView.swift */,
 				BD5BF7F7E979EE85818C0CAB /* SettingsView.swift */,
+				F1E2D3C4B5A6978869574321 /* StorageBoxListView.swift */,
 			);
 			path = Views;
 			sourceTree = "<group>";
@@ -254,6 +257,7 @@
 				5F721C85576A96EB92FDBE74 /* HetznerMountApp.swift in Sources */,
 				1DB9B4B86F4C6B114BF4D604 /* MenuBarView.swift in Sources */,
 				0D3B90138BF3E9FC1D3A4C89 /* SettingsView.swift in Sources */,
+				A1B2C3D4E5F6A7B8C9D0E1F2 /* StorageBoxListView.swift in Sources */,
 			);
 			runOnlyForDeploymentPostprocessing = 0;
 		};
@@ -363,7 +367,7 @@
 					"@executable_path/../Frameworks",
 				);
 				MACOSX_DEPLOYMENT_TARGET = 14.0;
-				PRODUCT_BUNDLE_IDENTIFIER = com.hetzner.mount.app;
+				PRODUCT_BUNDLE_IDENTIFIER = com.danielgtmn.hetznermount;
 				PRODUCT_NAME = HetznerMount;
 				PROVISIONING_PROFILE_SPECIFIER = "";
 				REGISTER_APP_GROUPS = YES;
@@ -391,7 +395,7 @@
 					"@executable_path/../../../../Frameworks",
 				);
 				MACOSX_DEPLOYMENT_TARGET = 14.0;
-				PRODUCT_BUNDLE_IDENTIFIER = com.hetzner.mount.app.fileprovider;
+				PRODUCT_BUNDLE_IDENTIFIER = com.danielgtmn.hetznermount.fileprovider;
 				PRODUCT_NAME = FileProviderExtension;
 				PROVISIONING_PROFILE_SPECIFIER = "";
 				REGISTER_APP_GROUPS = YES;
@@ -420,7 +424,7 @@
 					"@executable_path/../../../../Frameworks",
 				);
 				MACOSX_DEPLOYMENT_TARGET = 14.0;
-				PRODUCT_BUNDLE_IDENTIFIER = com.hetzner.mount.app.fileprovider;
+				PRODUCT_BUNDLE_IDENTIFIER = com.danielgtmn.hetznermount.fileprovider;
 				PRODUCT_NAME = FileProviderExtension;
 				PROVISIONING_PROFILE_SPECIFIER = "";
 				REGISTER_APP_GROUPS = YES;
@@ -508,7 +512,7 @@
 					"@executable_path/../Frameworks",
 				);
 				MACOSX_DEPLOYMENT_TARGET = 14.0;
-				PRODUCT_BUNDLE_IDENTIFIER = com.hetzner.mount.app;
+				PRODUCT_BUNDLE_IDENTIFIER = com.danielgtmn.hetznermount;
 				PRODUCT_NAME = HetznerMount;
 				PROVISIONING_PROFILE_SPECIFIER = "";
 				REGISTER_APP_GROUPS = YES;

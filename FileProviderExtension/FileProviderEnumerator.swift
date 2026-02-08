@@ -2,7 +2,7 @@ import FileProvider
 import HetznerMountKit
 import os.log
 
-private let enumLogger = Logger(subsystem: "com.hetzner.mount.app.fileprovider", category: "Enumerator")
+private let enumLogger = Logger(subsystem: "com.danielgtmn.hetznermount.fileprovider", category: "Enumerator")
 
 class FileProviderEnumerator: NSObject, NSFileProviderEnumerator {
     private let containerIdentifier: NSFileProviderItemIdentifier

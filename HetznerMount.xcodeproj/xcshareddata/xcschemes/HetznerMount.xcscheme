@@ -1,26 +1,11 @@
 <?xml version="1.0" encoding="UTF-8"?>
 <Scheme
    LastUpgradeVersion = "2620"
-   wasCreatedForAppExtension = "YES"
    version = "1.3">
    <BuildAction
       parallelizeBuildables = "YES"
       buildImplicitDependencies = "YES">
       <BuildActionEntries>
-         <BuildActionEntry
-            buildForTesting = "YES"
-            buildForRunning = "YES"
-            buildForProfiling = "YES"
-            buildForArchiving = "YES"
-            buildForAnalyzing = "YES">
-            <BuildableReference
-               BuildableIdentifier = "primary"
-               BlueprintIdentifier = "DC6AFD9BA1DFCB51D57301F6"
-               BuildableName = "FileProviderExtension.appex"
-               BlueprintName = "FileProviderExtension"
-               ReferencedContainer = "container:HetznerMount.xcodeproj">
-            </BuildableReference>
-         </BuildActionEntry>
          <BuildActionEntry
             buildForTesting = "YES"
             buildForRunning = "YES"
@@ -42,22 +27,13 @@
       selectedDebuggerIdentifier = "Xcode.DebuggerFoundation.Debugger.LLDB"
       selectedLauncherIdentifier = "Xcode.DebuggerFoundation.Launcher.LLDB"
       shouldUseLaunchSchemeArgsEnv = "YES">
-      <MacroExpansion>
-         <BuildableReference
-            BuildableIdentifier = "primary"
-            BlueprintIdentifier = "DC6AFD9BA1DFCB51D57301F6"
-            BuildableName = "FileProviderExtension.appex"
-            BlueprintName = "FileProviderExtension"
-            ReferencedContainer = "container:HetznerMount.xcodeproj">
-         </BuildableReference>
-      </MacroExpansion>
       <Testables>
       </Testables>
    </TestAction>
    <LaunchAction
       buildConfiguration = "Debug"
-      selectedDebuggerIdentifier = ""
-      selectedLauncherIdentifier = "Xcode.IDEFoundation.Launcher.PosixSpawn"
+      selectedDebuggerIdentifier = "Xcode.DebuggerFoundation.Debugger.LLDB"
+      selectedLauncherIdentifier = "Xcode.DebuggerFoundation.Launcher.LLDB"
       launchStyle = "0"
       useCustomWorkingDirectory = "NO"
       ignoresPersistentStateOnLaunch = "NO"
@@ -74,15 +50,6 @@
             ReferencedContainer = "container:HetznerMount.xcodeproj">
          </BuildableReference>
       </BuildableProductRunnable>
-      <MacroExpansion>
-         <BuildableReference
-            BuildableIdentifier = "primary"
-            BlueprintIdentifier = "DC6AFD9BA1DFCB51D57301F6"
-            BuildableName = "FileProviderExtension.appex"
-            BlueprintName = "FileProviderExtension"
-            ReferencedContainer = "container:HetznerMount.xcodeproj">
-         </BuildableReference>
-      </MacroExpansion>
    </LaunchAction>
    <ProfileAction
       buildConfiguration = "Release"
@@ -94,9 +61,9 @@
          runnableDebuggingMode = "0">
          <BuildableReference
             BuildableIdentifier = "primary"
-            BlueprintIdentifier = "DC6AFD9BA1DFCB51D57301F6"
-            BuildableName = "FileProviderExtension.appex"
-            BlueprintName = "FileProviderExtension"
+            BlueprintIdentifier = "F6A31DD39C549344BBAE7B9E"
+            BuildableName = "HetznerMount.app"
+            BlueprintName = "HetznerMount"
             ReferencedContainer = "container:HetznerMount.xcodeproj">
          </BuildableReference>
       </BuildableProductRunnable>

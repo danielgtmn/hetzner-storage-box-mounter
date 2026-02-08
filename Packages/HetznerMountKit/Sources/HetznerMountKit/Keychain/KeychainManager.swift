@@ -27,6 +27,26 @@ public final class KeychainManager: Sendable {
         self.accessGroup = accessGroup
     }
 
+    // MARK: - Config-scoped methods (multi-box)
+
+    public func savePassword(_ password: String, for account: String, configID: UUID) throws {
+        try savePassword(password, for: Self.accountKey(account, configID: configID))
+    }
+
+    public func loadPassword(for account: String, configID: UUID) throws -> String? {
+        try loadPassword(for: Self.accountKey(account, configID: configID))
+    }
+
+    public func deletePassword(for account: String, configID: UUID) throws {
+        try deletePassword(for: Self.accountKey(account, configID: configID))
+    }
+
+    private static func accountKey(_ account: String, configID: UUID) -> String {
+        "\(configID.uuidString)-\(account)"
+    }
+
+    // MARK: - Legacy methods (kept for migration)
+
     public func savePassword(_ password: String, for account: String) throws {
         guard let data = password.data(using: .utf8) else { return }
         // Delete existing first

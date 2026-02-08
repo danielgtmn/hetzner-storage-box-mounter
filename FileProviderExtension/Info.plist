@@ -6,12 +6,16 @@
 	<string>HetznerMount FileProvider</string>
 	<key>CFBundleIdentifier</key>
 	<string>$(PRODUCT_BUNDLE_IDENTIFIER)</string>
+	<key>CFBundleVersion</key>
+	<string>1</string>
+	<key>CFBundleShortVersionString</key>
+	<string>1.0</string>
 	<key>LSMinimumSystemVersion</key>
 	<string>14.0</string>
 	<key>NSExtension</key>
 	<dict>
 		<key>NSExtensionFileProviderDocumentGroup</key>
-		<string>group.com.hetzner.mount</string>
+		<string>group.com.danielgtmn.hetznermount</string>
 		<key>NSExtensionFileProviderSupportsEnumeration</key>
 		<true/>
 		<key>NSExtensionPointIdentifier</key>

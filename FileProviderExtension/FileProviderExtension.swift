@@ -2,7 +2,7 @@ import FileProvider
 import HetznerMountKit
 import os.log
 
-private let logger = Logger(subsystem: "com.hetzner.mount.app.fileprovider", category: "Extension")
+private let logger = Logger(subsystem: "com.danielgtmn.hetznermount.fileprovider", category: "Extension")
 
 class FileProviderExtension: NSObject, NSFileProviderReplicatedExtension {
     let domain: NSFileProviderDomain
@@ -13,21 +13,48 @@ class FileProviderExtension: NSObject, NSFileProviderReplicatedExtension {
     required init(domain: NSFileProviderDomain) {
         self.domain = domain
         super.init()
+        signal(SIGPIPE, SIG_IGN)
         setupConnection()
     }
 
     private func setupConnection() {
-        guard let config = StorageBoxConfig.load() else {
-            logger.error("No config found")
+        let domainRaw = domain.identifier.rawValue
+        let prefix = "com.danielgtmn.hetznermount.storagebox."
+        let store = StorageBoxConfigStore()
+
+        // Try to parse config UUID from new-style domain identifier
+        var resolvedConfig: StorageBoxConfig?
+        var resolvedConfigID: UUID?
+
+        if domainRaw.hasPrefix(prefix),
+           let configID = UUID(uuidString: String(domainRaw.dropFirst(prefix.count))) {
+            resolvedConfig = store.get(id: configID)
+            resolvedConfigID = configID
+        }
+
+        // Fallback: old domain format or first available config
+        if resolvedConfig == nil {
+            logger.warning("Domain \(domainRaw) not matched by UUID, trying fallback")
+            if let first = store.loadAll().first {
+                resolvedConfig = first
+                resolvedConfigID = first.id
+            }
+        }
+
+        guard let config = resolvedConfig, let configID = resolvedConfigID else {
+            logger.error("No config found for domain: \(domainRaw)")
             return
         }
+
         self.config = config
         logger.info("Config loaded: host=\(config.host), user=\(config.username), basePath=\(config.basePath)")
 
         let keychain = KeychainManager()
         let password: String?
         do {
-            password = try keychain.loadPassword(for: config.username)
+            password = try keychain.loadPassword(for: config.username, configID: configID)
+            // Fallback: try legacy keychain key
+            ?? keychain.loadPassword(for: config.username)
             logger.info("Password loaded from keychain: \(password != nil ? "yes" : "NO")")
         } catch {
             logger.error("Keychain load failed: \(error.localizedDescription)")
@@ -44,13 +71,27 @@ class FileProviderExtension: NSObject, NSFileProviderReplicatedExtension {
         if let fpError = error as? NSFileProviderError {
             return fpError as NSError
         }
-        let desc = error.localizedDescription
-        if desc.contains("Permission") || desc.contains("PERMISSION") {
+
+        let desc = "\(error)"
+        let typeName = String(describing: type(of: error))
+
+        // Authentication errors
+        if typeName.contains("AuthenticationFailed")
+            || desc.contains("allAuthenticationOptionsFailed")
+            || desc.contains("unauthorized") {
             return NSFileProviderError(.notAuthenticated) as NSError
         }
-        if desc.contains("No such file") || desc.contains("NOT_FOUND") {
+
+        // Permission denied (SFTP status)
+        if desc.lowercased().contains("permission denied") || desc.contains("permissionDenied") {
+            return NSFileProviderError(.notAuthenticated) as NSError
+        }
+
+        // File not found
+        if desc.lowercased().contains("no such file") || desc.contains("noSuchFile") || desc.contains("fileNotFound") {
             return NSFileProviderError(.noSuchItem) as NSError
         }
+
         return NSFileProviderError(.serverUnreachable) as NSError
     }
 
@@ -85,10 +126,16 @@ class FileProviderExtension: NSObject, NSFileProviderReplicatedExtension {
     ) -> Progress {
         let progress = Progress(totalUnitCount: 1)
 
+        guard let config = config else {
+            completionHandler(nil, NSFileProviderError(.notAuthenticated) as NSError)
+            progress.completedUnitCount = 1
+            return progress
+        }
+
         if identifier == .rootContainer {
             let rootItem = RemoteItem(
-                path: config?.basePath ?? "/",
-                filename: "StorageBox",
+                path: config.basePath,
+                filename: config.effectiveDisplayName.isEmpty ? "StorageBox" : config.effectiveDisplayName,
                 isDirectory: true,
                 size: 0,
                 modificationDate: nil,
