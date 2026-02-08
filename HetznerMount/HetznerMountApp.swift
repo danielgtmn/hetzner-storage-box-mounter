@@ -1,3 +1,4 @@
+import Sparkle
 import SwiftUI
 import os.log
 
@@ -23,7 +24,7 @@ struct HetznerMountApp: App {
                 ? "externaldrive.fill.badge.checkmark"
                 : "externaldrive.badge.xmark"
         ) {
-            MenuBarView()
+            MenuBarView(updater: appDelegate.updaterController.updater)
         }
         .menuBarExtraStyle(.window)
 
@@ -35,6 +36,8 @@ struct HetznerMountApp: App {
 }
 
 class AppDelegate: NSObject, NSApplicationDelegate {
+    let updaterController = SPUStandardUpdaterController(startingUpdater: true, updaterDelegate: nil, userDriverDelegate: nil)
+
     /// Holds the activity token to prevent automatic termination
     private var activity: NSObjectProtocol?
 
