@@ -43,6 +43,12 @@ jobs:
             -derivedDataPath build \
             CODE_SIGN_IDENTITY="-"
 
+      - name: Re-sign app bundle
+        run: |
+          APP_PATH="build/Build/Products/Release/HetznerMount.app"
+          codesign --force --deep --sign - "$APP_PATH"
+          codesign --verify --deep --strict "$APP_PATH"
+
       - name: Create DMG
         run: |
           brew install create-dmg
